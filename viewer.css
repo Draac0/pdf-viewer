@@ -372,11 +372,6 @@
   --button-secondary-hover-bg-color:var(--csstools-light-dark-toggle--56, rgb(21 20 26 / 0.14));
   --button-secondary-hover-fg-color:var(--button-secondary-fg-color);
   --button-secondary-hover-border-color:var(--button-secondary-hover-bg-color);
-  --button-secondary-disabled-bg-color:var(--button-secondary-bg-color);
-  --button-secondary-disabled-border-color:var(
-    --button-secondary-border-color
-  );
-  --button-secondary-disabled-fg-color:var(--button-secondary-fg-color);
 
   --csstools-light-dark-toggle--57:var(--csstools-color-scheme--light) #0df;
 
@@ -392,10 +387,9 @@
   --button-primary-hover-bg-color:var(--csstools-light-dark-toggle--60, #0250bb);
   --button-primary-hover-fg-color:var(--button-primary-fg-color);
   --button-primary-hover-border-color:var(--button-primary-hover-bg-color);
-  --button-primary-disabled-bg-color:var(--button-primary-bg-color);
-  --button-primary-disabled-border-color:var(--button-primary-border-color);
-  --button-primary-disabled-fg-color:var(--button-primary-fg-color);
-  --button-disabled-opacity:0.4;
+
+  --button-disabled-bg-color:color-mix(in srgb, currentcolor, transparent 60%);
+  --button-disabled-fg-color:var(--button-disabled-bg-color);
 
   --csstools-light-dark-toggle--61:var(--csstools-color-scheme--light) #42414d;
 
@@ -519,7 +513,6 @@
 
 .dialog{
     --hover-filter:brightness(1.4);
-    --button-disabled-opacity:0.6;
 }
   }
 
@@ -554,8 +547,6 @@
     --button-secondary-hover-bg-color:HighlightText;
     --button-secondary-hover-fg-color:SelectedItem;
     --button-secondary-hover-border-color:SelectedItem;
-    --button-secondary-disabled-fg-color:GrayText;
-    --button-secondary-disabled-border-color:GrayText;
 
     --button-primary-bg-color:ButtonText;
     --button-primary-fg-color:HighlightText;
@@ -566,10 +557,9 @@
     --button-primary-hover-bg-color:SelectedItem;
     --button-primary-hover-fg-color:HighlightText;
     --button-primary-hover-border-color:SelectedItem;
-    --button-primary-disabled-bg-color:GrayText;
-    --button-primary-disabled-fg-color:ButtonFace;
-    --button-primary-disabled-border-color:GrayText;
-    --button-disabled-opacity:1;
+
+    --button-disabled-bg-color:GrayText;
+    --button-disabled-fg-color:ButtonFace;
 
     --input-text-bg-color:HighlightText;
     --input-text-fg-color:FieldText;
@@ -713,13 +703,6 @@
           border-color:var(--button-secondary-active-border-color);
         }
 
-.secondaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton,.clearInputButton))):disabled{
-          background-color:var(--button-secondary-disabled-bg-color);
-          border-color:var(--button-secondary-disabled-border-color);
-          color:var(--button-secondary-disabled-fg-color);
-          opacity:var(--button-disabled-opacity);
-        }
-
 .primaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton,.clearInputButton))){
         color:var(--button-primary-fg-color);
         background-color:var(--button-primary-bg-color);
@@ -739,14 +722,10 @@
           border-color:var(--button-primary-active-border-color);
         }
 
-.primaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton,.clearInputButton))):disabled{
-          background-color:var(--button-primary-disabled-bg-color);
-          border-color:var(--button-primary-disabled-border-color);
-          color:var(--button-primary-disabled-fg-color);
-          opacity:var(--button-disabled-opacity);
-        }
-
 :is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton,.clearInputButton))):disabled{
+        color:var(--button-disabled-fg-color) !important;
+        background-color:var(--button-disabled-bg-color);
+        border-color:var(--button-disabled-bg-color);
         pointer-events:none;
       }
 
@@ -1132,16 +1111,6 @@
         display:none;
       }
 
-:is(.annotationLayer section) .overlaidText{
-      position:absolute;
-      top:0;
-      left:0;
-      width:0;
-      height:0;
-      display:inline-block;
-      overflow:hidden;
-    }
-
 .textLayer.selecting ~ .annotationLayer section{
     pointer-events:none;
   }
@@ -1158,6 +1127,7 @@
 .annotationLayer :is(.linkAnnotation,.buttonWidgetAnnotation.pushButton):not(.hasBorder) > a:hover{
     opacity:0.2;
     background-color:rgb(255 255 0);
+    box-shadow:0 2px 10px rgb(255 255 0);
   }
 
 .annotationLayer .linkAnnotation.hasBorder:hover{
@@ -1330,9 +1300,8 @@
     display:inline-block;
   }
 
-.annotationLayer .popup > .header > .title{
+.annotationLayer .popup > .header h1{
     display:inline;
-    font-weight:bold;
   }
 
 .annotationLayer .popup > .header .popupDate{
@@ -1356,11 +1325,6 @@
 .annotationLayer .popupTriggerArea{
     cursor:pointer;
   }
-
-:is(.annotationLayer .popupTriggerArea):hover{
-      -webkit-backdrop-filter:var(--hcm-highlight-filter);
-              backdrop-filter:var(--hcm-highlight-filter);
-    }
 
 .annotationLayer section svg{
     position:absolute;
@@ -2947,6 +2911,19 @@
 
   --new-alt-text-warning-image:url(images/altText_warning.svg);
 }
+.visuallyHidden{
+  position:absolute;
+  top:0;
+  left:0;
+  border:0;
+  margin:0;
+  padding:0;
+  width:0;
+  height:0;
+  overflow:hidden;
+  white-space:nowrap;
+  font-size:0;
+}
 
 .textLayer.highlighting{
     cursor:var(--editorFreeHighlight-editing-cursor);
@@ -3013,14 +2990,6 @@
     pointer-events:none !important;
   }
 
-.annotationEditorLayer.getElements{
-    pointer-events:auto !important;
-  }
-
-.annotationEditorLayer.getElements  > div{
-      pointer-events:auto !important;
-    }
-
 .annotationEditorLayer.waiting{
   content:"";
   cursor:wait;
@@ -3033,10 +3002,6 @@
 .annotationEditorLayer.disabled{
   pointer-events:none;
 }
-
-.annotationEditorLayer.disabled.highlightEditing :is(.freeTextEditor,.inkEditor,.stampEditor,.signatureEditor){
-    pointer-events:auto;
-  }
 
 .annotationEditorLayer.freetextEditing{
   cursor:var(--editorFreeText-editing-cursor);
@@ -3459,7 +3424,6 @@
   white-space:nowrap;
   font:10px sans-serif;
   line-height:var(--freetext-line-height);
-  text-align:start;
   -webkit-user-select:none;
      -moz-user-select:none;
           user-select:none;
@@ -4035,10 +3999,6 @@
 .colorPicker button:is(:hover,.selected) > .swatch{
     border:none;
   }
-
-.basicColorPicker{
-  width:28px;
-}
 
 .annotationEditorLayer[data-main-rotation="0"] .highlightEditor:not(.free) > .editToolbar{
       rotate:0deg;
@@ -4720,6 +4680,8 @@
   --toolbarButton-menuArrow-icon:url(images/toolbarButton-menuArrow.svg);
   --toolbarButton-sidebarToggle-icon:url(images/toolbarButton-sidebarToggle.svg);
   --toolbarButton-secondaryToolbarToggle-icon:url(images/toolbarButton-secondaryToolbarToggle.svg);
+  --toolbarButton-expand:url(images/toolbarButton-expand.svg);
+  --toolbarButton-minimize:url(images/toolbarButton-minimize.svg);
   --toolbarButton-pageUp-icon:url(images/toolbarButton-pageUp.svg);
   --toolbarButton-pageDown-icon:url(images/toolbarButton-pageDown.svg);
   --toolbarButton-zoomOut-icon:url(images/toolbarButton-zoomOut.svg);
@@ -4961,19 +4923,6 @@ body.wait::before{
     z-index:100000;
     cursor:wait;
   }
-.visuallyHidden{
-  position:absolute;
-  top:0;
-  left:0;
-  border:0;
-  margin:0;
-  padding:0;
-  width:0;
-  height:0;
-  overflow:hidden;
-  white-space:nowrap;
-  font-size:0;
-}
 
 .hidden,
 [hidden]{
@@ -5038,7 +4987,7 @@ body.wait::before{
 #mainContainer{
   position:absolute;
   inset:0;
-  min-width:350px;
+  min-width:300px;
   margin:0;
   display:flex;
   flex-direction:column;
@@ -5256,6 +5205,18 @@ body.wait::before{
 #secondaryToolbarToggleButton::before{
   -webkit-mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
           mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
+  transform:scaleX(var(--dir-factor));
+}
+
+.fullScreenToggle-on::before{
+  -webkit-mask-image:var(--toolbarButton-minimize);
+          mask-image:var(--toolbarButton-minimize);
+  transform:scaleX(var(--dir-factor));
+}
+
+.fullScreenToggle-off::before{
+  -webkit-mask-image:var(--toolbarButton-expand);
+          mask-image:var(--toolbarButton-expand);
   transform:scaleX(var(--dir-factor));
 }
 
